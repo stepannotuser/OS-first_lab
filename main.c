@@ -18,12 +18,10 @@ mutex_data global_data = {
 };
 
 void provide_handler(mutex_data *channel, int data) {
-	pthread_mutex_lock(&channel->lock);
-    
+	pthread_mutex_lock(&channel->lock);    
     while (channel->is_ready != 0) {
         pthread_cond_wait(&channel->cond, &channel->lock);
-    }
-	
+    }	
 	channel->data = data;
 	channel->is_ready = 1;  
 	pthread_cond_signal(&channel->cond);
@@ -60,7 +58,6 @@ void* worker(void* a) {
     }
     return NULL;
 }
-
 
 int main() {
     
