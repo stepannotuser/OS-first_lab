@@ -44,6 +44,7 @@ int worker_handler(mutex_data *channel) {
     }
     int data = channel->data;
     channel->is_ready = 0;
+    pthread_cond_signal(&channel->cond);
     pthread_mutex_unlock(&channel->lock); 
     return data;
 }
@@ -71,7 +72,7 @@ int main() {
     }
     
     int result_worker = pthread_create(&thread_consumer, NULL, worker, NULL);
-    if (result_provider != 0) {
+    if (result_worker != 0) {
         printf("pthread_create failed: %d\n", result_worker);
         return result_worker;
     }
